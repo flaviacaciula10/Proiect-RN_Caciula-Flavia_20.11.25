@@ -1,0 +1,14 @@
+*split_data.py* împarte datele procesate în 3 categorii pentru antrenarea AI.
+
+Cum împarte datele (ca și procentaj):
+
+- TRAIN (70%): Din aceste poze învață rețeaua.
+- VALIDATION (15%): Rețeaua le vede în timpul antrenării doar pentru a verifica dacă progresează.
+- TEST (15%): Examenul final. Rețeaua nu vede aceste poze NICIODATĂ până la final. Nota proiectului se dă pe baza acestora.
+
+Cum funcționează:
+
+- Iterare: Trece prin fiecare clasă definită în lista CLASSES (0-5 ani, 5-10 ani, etc.).
+- Amestecare (random.shuffle): Dacă nu am amesteca pozele, rețeaua ar putea primi la antrenament doar poze cu copii cu trăsături asemănătoare în cazul în care pozele au fost generate după un pattern și pe categorii.
+- Calcul matematic: Calculează exact câte poze înseamnă 70% din total și taie lista în 3 bucăți (train_imgs, val_imgs, test_imgs).
+- Copiere (shutil.copy): Copiază fizic fișierele din data/processed în folderele finale data/train, data/validation, data/test.
