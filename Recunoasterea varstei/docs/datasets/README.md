@@ -8,7 +8,8 @@
 
 ### 2.2 Caracteristicile dataset-ului
 
-* **Număr total de observații:** 360
-* **Număr de caracteristici (features):** 18
+* **Număr total de observații:** 1x20, 15x15 (deci total 245)
+* **Număr de caracteristici (features):** 16 (de la 0 ani până la 80 de ani pe categorii din 5 în 5 ani)
 * **Tipuri de date:** Imagini
-* **Format fișiere:** PNG
+
+* **Format fișiere:** JPG (pentru stocare mai puțină)
