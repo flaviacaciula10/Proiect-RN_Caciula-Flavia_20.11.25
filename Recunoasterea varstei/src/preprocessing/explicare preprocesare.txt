@@ -1,0 +1,47 @@
+MODULUL 1: preprocesare.py (Motorul de Procesare)
+
+*Biblioteci folosite:*
+
+- cv2 (OpenCV): Biblioteca standard pentru manipularea imaginilor (citire, resize, culori)
+- mediapipe: O bibliotecă de la Google care conține modele pre-antrenate. O folosesc pentru SelfieSegmentation (a separa persoana de fundal)
+- numpy: Folosită pentru calcule matematice pe matrice (imaginile sunt de fapt matrice de numere)
+
+*Funcția: preprocesare_varsta(path_imagine, target_size)* fiind funcția principală care se apelează pentru fiecare poză.
+
+*Pasul 1: Eliminarea fundalului*
+
+- Rețeaua trebuie să învețe trăsăturile feței, așa că voi elemina fundalul pentru a rămâne doar fața persoanei
+- Folosesc segmenter.process() din MediaPipe. Acesta returnează o imagine alb-negru unde albul e persoana și negrul e fundalul
+- Orice pixel care nu este persoană este colorat cu negru (0,0,0)
+
+*Pasul 2: Decuparea*
+
+- Vreau să elimin spațiul negru inutil din jurul persoanei, ca fața să fie cât mai mare în imagine
+- cv2.findNonZero: Găsește toți pixelii care nu sunt negri
+- cv2.boundingRect: Desenează un dreptunghi imaginar în jurul persoanei
+- Padding: Adăugăm 15% spațiu extra (pad). Fără asta, dreptunghiul ar tăia fix pe contur și am risca să tăiem urechile sau bărbia subiectului
+
+*Pasul 3: Redimensionarea*
+
+*Funcția: resize_and_pad(img, target_size)* transformă imaginea decupată (care poate fi dreptunghiulară) într-un pătrat perfect (200x200) fără să o deformeze
+
+Dacă am da simplu resize(200, 200) la o poză înaltă și subțire, fața ar ieși turtită așa că am decis să folosesc următoarea metodă:
+- Calculăm un scale (factor de micșorare) astfel încât poza să încapă în 200x200
+- Micșorăm poza păstrând proporțiile (ex: devine 66x200)
+- Creăm un "canvas" neagru de 200x200
+- Lipim poza micșorată fix în centrul planșei negre
+
+MODULUL 2: adaugare_in_fisiere.py
+
+*Funcția: proceseaza_folder(folder_raw, folder_processed)*
+
+- Primește un folder de intrare (unde sunt pozele raw) și unul de ieșire
+- os.listdir(folder_raw): Face lista cu toate fișierele din folder (imaginile cu persoane)
+- if fisier.endswith(...): Verifică procesarea pozelor de tip (.jpg, .png), nu alte fișiere
+- try...except: Aceasta este o plasă de siguranță. Dacă o poză este coruptă și dă eroare, programul nu se oprește (nu dă crash), ci doar afișează eroarea și trece la următoarea poză
+
+*Funcția: proceseaza_toate_pozele()*
+
+- Este funcția care dirijează traficul
+- Se uită în folderul mare data/raw
+- Pentru fiecare sub-folder găsit (ex: "0-5 ani", "5-10 ani"), creează un folder corespondent în data/processed și pornește procesarea
