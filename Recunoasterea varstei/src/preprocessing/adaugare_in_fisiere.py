@@ -10,9 +10,6 @@ def asigura_director(path):
         os.makedirs(path)
 
 def proceseaza_folder(folder_raw, folder_processed):
-    """
-    Procesează toate imaginile dintr-un folder și le salvează în folderul procesat.
-    """
     asigura_director(folder_processed)
 
     for fisier in os.listdir(folder_raw):
@@ -28,19 +25,17 @@ def proceseaza_folder(folder_raw, folder_processed):
             except Exception as e:
                 print(f"Eroare la {cale_raw}: {e}")
 
-    print(f"✔ Folder procesat: {folder_raw} → {folder_processed}")
+    print(f"Folder procesat: {folder_raw} -> {folder_processed}")
 
 def proceseaza_toate_pozele():
-    """
-    Parcurge toate subfolderele din data/raw și procesează imaginile corespunzător.
-    """
-    for pers in os.listdir(RAW_DIR):
-        folder_raw = os.path.join(RAW_DIR, pers)
+    asigura_director(PROCESSED_DIR)
 
-        if os.path.isdir(folder_raw):
-            folder_processed = os.path.join(PROCESSED_DIR, pers)
-            proceseaza_folder(folder_raw, folder_processed)
+    for nume_folder in os.listdir(RAW_DIR):
+        cale_folder_raw = os.path.join(RAW_DIR, nume_folder)
+        
+        if os.path.isdir(cale_folder_raw):
+            cale_folder_out = os.path.join(PROCESSED_DIR, nume_folder)
+            proceseaza_folder(cale_folder_raw, cale_folder_out)
 
 if __name__ == "__main__":
     proceseaza_toate_pozele()
-    print("✔ Toate imaginile au fost procesate!")
